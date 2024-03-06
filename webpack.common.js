@@ -5,11 +5,22 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 module.exports = {
   entry: {
     app: {
-      import: "./index-web.tsx",
+      import: "./index-web.js",
     },
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".css", ".scss"],
+    extensions: [
+      ".web.tsx",
+      ".tsx",
+      ".web.ts",
+      ".ts",
+      ".web.jsx",
+      ".jsx",
+      ".web.js",
+      ".js",
+      ".css",
+      ".json",
+    ],
     plugins: [new TsconfigPathsPlugin()],
     alias: {
       "react-native$": "react-native-web",
@@ -23,16 +34,21 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+      },
+      {
         test: /\.(ts|tsx)$/,
         exclude: [path.resolve("node_modules")],
         use: [
           {
             loader: "ts-loader",
-            options: {
-              compilerOptions: {
-                noEmit: false,
-              },
-            },
           },
         ],
       },

@@ -5,71 +5,45 @@
  * @format
  */
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import {
-  Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Home from "src/screens/Home/Home";
+import Profile from "src/screens/Profile/Profile";
 
-type SectionProps = {
-  title: string;
-  children: React.ReactNode;
+const Stack = createNativeStackNavigator();
+
+const config = {
+  screens: {
+    Home: "/",
+    Profile: "/profile",
+  },
 };
 
-function Section({ children, title }: SectionProps) {
-  return (
-    <View style={styles.sectionContainer}>
-      <Text style={[styles.sectionTitle]}>{title}</Text>
-      <Text style={[styles.sectionDescription]}>{children}</Text>
-    </View>
-  );
-}
+const linking = {
+  prefixes: ["/"],
+  config,
+};
 
 function App() {
-  const isDarkMode = useColorScheme() === "dark";
-
   return (
-    <SafeAreaView>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.zzz
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <Button title="yo" />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: "transparent",
+            },
+          }}>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: "400",
-  },
-  highlight: {
-    fontWeight: "700",
-  },
-});
 
 export default App;
